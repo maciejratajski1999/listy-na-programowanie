@@ -1,2 +1,2 @@
-wersja wstępna 
-wszystko działa, ale pewnie można ładniej
+Wszystko działa,
+szczegóły do zadań jako komentarzy w pliku main.py
