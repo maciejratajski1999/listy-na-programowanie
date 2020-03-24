@@ -7,7 +7,7 @@ from zadanie_4 import ModTimes
 #zadanie 1 - wypisze datę Wielkanocy w roku 2020
 print(data_Wielkanocy(2020))
 
-#utworzy w obecnym folderze miniaturę obrazka w wymiarach 160 x 90 i zapisze domyślnie jako thumbnail.jpg w obecnym folderze
+#utworzy w obecnym folderze miniaturę obrazka w wymiarach 160 x 90 i zapisze domyślnie jako miniatura.jpg w obecnym folderze
 create_thumbnail(r"Alpacas.jpg", (160, 90))
 
 #utworzy w obecnym folderze archive.zip zawierający folder archive i wszystkie jego podfoldery oraz pliki w nich się znajdujące
