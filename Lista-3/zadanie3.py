@@ -26,7 +26,11 @@ def backupcopy(suffix, dir = os.getcwd()):
             fullstop = file.find(".") + 1
             time_since_modification = os.path.getmtime(os.path.join(direc, file)) - time.time()
             if file[fullstop:] == suffix and time_since_modification <= 3*24*60*60 :
-                shutil.copyfile(os.path.join(direc, file), destination + "/" + file)
+                try:
+                    shutil.copyfile(os.path.join(direc, file), destination + "/" + file)
+                except shutil.SameFileError:
+                    print("trying to backup the backup archive! change destination directory (dir)")
+
 
 
 
