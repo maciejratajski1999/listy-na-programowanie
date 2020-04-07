@@ -1,0 +1,2 @@
+Przetestujmy zadania 1- 4
+To jest text_2.txt
