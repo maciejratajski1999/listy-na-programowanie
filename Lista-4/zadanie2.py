@@ -106,6 +106,7 @@ class Agent:
             1 - agent
             2 - ślad agenta
         '''
+
         # wstawienie agenta na odpowiednie miejsce na siatce
         self.grid[pos[0] - 1][pos[1] - 1] = 1
 
