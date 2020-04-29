@@ -10,6 +10,11 @@ class Agent:
     '''
     klasa Agent służy do generowania gifa symulującego ruch agenta po kratce o wymiarach 20 x 20
 
+    jeśli w obecnym folderze znajduje się już folder o takiej samej nazwie jak zawartość zmiennej
+        self.temp, wywołanie instancji klasy nie zadziała
+
+    przy ilości klatek n większej niż 200 zdarzyły mi się błędy niespowodowane błędnym kodem,
+        a raczej niewystarczającą pamięcią komputera błąd 'failed to allocate bitmap'
     '''
 
     def __init__(self, n, temp = 'temporary_images' ):
@@ -58,6 +63,7 @@ class Agent:
     def __jump(self, pos):
         '''
         metoda jump losuje w którą stronę wykonany będzie następny skok agenta
+            agent może ruszyć się o jedną kratkę w lewo-prawo, góra-dół, bądź na skos
 
         :param pos (tuple(int, int)): obecna pozycja agenta na siatce
         :return: new_pos (tuple(int, int)): nowa pozycja agenta na siatce
@@ -88,6 +94,7 @@ class Agent:
         return new_pos
 
     def __generate_image(self, pos, i):
+        print(pos)
         '''
         metoda generate_image generuje jedną klatkę i zapisuje ją do pliku typu .png w tymczasowym folderze temporary_images
 
@@ -104,7 +111,7 @@ class Agent:
         self.grid[pos[0] - 1][pos[1] - 1] = 1
 
         # generowanie i zapis obrazka
-        cmap = colors.ListedColormap(['white', 'red', "#ffaaaa"])
+        cmap = colors.ListedColormap(['white', 'red', "#ff8888"])
         plt.figure(figsize=(10, 10))
         plt.pcolor(self.grid[::-1], cmap=cmap, edgecolors='black', linewidths=5)
         plt.xticks(np.arange(1, 20.1, step=1))
@@ -128,7 +135,7 @@ class Agent:
     def __generate_gif(self):
         '''
         ta metoda otwiera archiwum z plikami i znajduje potrzebne pliki .png,
-        następnie tworzy z nich gifa, którego zapisuje jako agents_pathDATA.gif,
+        następnie tworzy z nich gifa, którego zapisuje jako agents_pathDATA.gif w obecnym folderze,
             gdzie data to obecna data i godzina w formacie: YYYY_MM_DD_HH_mm_ss   malejąca znaczącość od roku do sekundy
         '''
 

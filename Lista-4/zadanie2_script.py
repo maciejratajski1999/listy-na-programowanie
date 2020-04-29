@@ -36,3 +36,9 @@ if __name__ == "__main__":
             print(str(val_err.args[0]))
         except TypeError as typ_err:
             print(str(typ_err.args[0]))
+
+# przykładowe użycie nie z konsoli:
+# my_agent = Agent(100)
+# my_agent()
+
+# gif pojawi się w obecnym folderze
