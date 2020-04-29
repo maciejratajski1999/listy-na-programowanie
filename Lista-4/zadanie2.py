@@ -94,7 +94,6 @@ class Agent:
         return new_pos
 
     def __generate_image(self, pos, i):
-        print(pos)
         '''
         metoda generate_image generuje jedną klatkę i zapisuje ją do pliku typu .png w tymczasowym folderze temporary_images
 
