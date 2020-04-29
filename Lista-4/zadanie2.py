@@ -87,9 +87,9 @@ class Agent:
         # a tutaj dla osi y
         if new_pos[1] not in range(1, 21):
             if new_pos[1] > 20:
-                new_pos = pos[0] + x_y[0], pos[1] + x_y[1] - 20
+                new_pos = new_pos[0], pos[1] + x_y[1] - 20
             if new_pos[1] < 1:
-                new_pos = pos[0] + x_y[0], pos[1] + x_y[1] + 20
+                new_pos = new_pos[0], pos[1] + x_y[1] + 20
 
         return new_pos
 
