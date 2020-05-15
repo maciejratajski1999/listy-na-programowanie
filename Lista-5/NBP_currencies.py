@@ -1,25 +1,27 @@
-from bs4 import BeautifulSoup, Tag
 import urllib.request
 import json
-
 class NBP_currencies:
     '''
-    Klasa sczytuje dane z pliku HTML w linku self.url i przemienia je w wygodny do użycia format
+    Klasa sczytuje dane do pliku JSON w linku self.url i przemienia je w wygodny do użycia format
     '''
 
     def __init__(self):
-        ''' currencies (Dictionary) : ("kod i nazwa waluty" : wartość w typie Float)'''
-        # url pliku html, lub strony, z której będziemy pobierać dane
-        self.url = "https://www.nbp.pl/home.aspx?f=/kursy/kursya.html"
+        ''' currencies (Dictionary) : {"kod i nazwa waluty" : wartość (Float)}'''
+        # url strony, z której będziemy pobierać dane
+        self.url = 'https://api.nbp.pl/api/exchangerates/tables/A'
 
-        # generowanie danych do self.currencies
+        # pobieranie danych ze strony NBP
         try:
-            self.currencies = self.__generate_currencies(self.__find_currencies())
-
-        # w przypadku braku połączenia ze stroną internetową, załaduj dane z pliku .json
+            self.__download_data()
+        # w przypadku braku połączenia ze stroną internetową
         except urllib.error.URLError:
-            with open('currencies.json') as data_file:
-                self.currencies = json.load(data_file)
+            print('brak połączenia z internetem, wczytuję z archiwum')
+        # generowanie słownika z danych
+        try:
+            self.currencies = self.__generate_currencies()
+        # jeśli nie znaleziono pliku z danymi
+        except IOError:
+            print("nie znaleziono pliku nbp_data.json")
 
     def __call__(self):
         '''
@@ -28,58 +30,34 @@ class NBP_currencies:
          :return: currencies (Dictionary) : {"kod i nazwa waluty" : kurs (Float)}'''
         return self.currencies
 
-    def __find_currencies(self):
+    def __download_data(self):
         '''
-        ta metoda szuka w self.url odpowiednich pozycji i zwraca listę słowników,
-        w której każdy słownik zawiera informacje dotyczące jednej waluty
-
-        :return: currencies_list (List of Dictionaries) : każdy słownik zawiera dane jednej waluty
-                                        [{"name" : "nazwa waluty",
-                                        "multiplier" : przelicznik (Integer),
-                                        "code" : "KOD waluty",
-                                        "mean_price" : średni kurs (Float)}]
+        metoda wywoływana przy inicjalizacji klasy, pobiera z url dane NBP, konwertuje do typu List i zapisuje je w pliku JSON
         '''
+        # pobieram JSON z url za pomocą dostępnego API
+        request = urllib.request.Request(self.url)
+        request.add_header('Accept', 'application/json')
+        response = urllib.request.urlopen(request)
+        # konwertuję otrzymany plik z typu Bytes do typu List
+        json_bytes = response.read()
+        json_string = json_bytes.decode('utf-8')
+        json_list = json.loads(json_string)
+        # i zapisuję do pliku JSON
+        with open('nbp_data.json', 'w') as data_file:
+            json.dump(json_list, data_file, indent=1)
 
-        # ten fragment kodu jest wzięty z Pani przykładu data_from_net.py
-        with urllib.request.urlopen(self.url) as response:
-            page = BeautifulSoup(response, 'html.parser')
-            url2 = 'https://www.nbp.pl' + page.find_all(id="article")[0].find_all("a")[1]['href']
-        with urllib.request.urlopen(url2) as response:
-            page = BeautifulSoup(response, 'html.parser')
-
-        # każda osobna waluta jest wpisana w tag <pozycja> w pliku HTML, więc tworzę listę wszystkich <pozycji>
-        currencies_html = page.find_all('pozycja')
-        currencies_list = []
-        for position in currencies_html:
-        # sczytuję dane z kolejnych tagów w każdej pozycji i tworzę z nich słownik
-            currency = {
-                "name": position.find('nazwa_waluty').contents[0],
-                "multiplier": int(position.find('przelicznik').contents[0]),
-                "code": position.find('kod_waluty').contents[0],
-                "mean_price": float(position.find('kurs_sredni').contents[0].replace(",", "."))
-            }
-        # i dodaję słownik do listy
-            currencies_list.append(currency)
-        return currencies_list
-
-    def __generate_currencies(self, currencies_list):
+    def __generate_currencies(self):
         '''
-        Ta funkcja przerabia listę słowników zawierających dane pojedynczych walut na słownik, który będzie bardziej praktyczny w przypadku przeliczania kursów walut
-
-        :param currencies_list (List of Dictionaries): lista słowników generowana przez metodę __find_currencies
-                                        [{"name" : "nazwa waluty",
-                                        "multiplier" : przelicznik (Integer),
-                                        "code" : "KOD waluty",
-                                        "mean_price" : średni kurs (Float)}]
-
-        :return currencies (Dictionary):  {"kod i nazwa waluty" : kurs (Float)}
+        metoda sczytuje dane z pliku JSON i wybiera potrzebne informacje, a następnie tworzy z nich słownik currencies
+        :return currencies (Dictionary) : {"kod i nazwa waluty" : wartość (Float)}
         '''
-        # generuję słownik z listy, w którym każda para klucz : wartość odpowiada jednej parze waluta : kurs
-        currencies = {cur["code"] + " " + cur["name"] : cur["mean_price"] / cur["multiplier"] for cur in currencies_list}
-
-        # zapisujemy dane do pliku .json, aby mieć dostęp do danych offline
-        with open('currencies.json', 'w') as data_file:
-            json.dump(currencies, data_file, indent=1)
-
+        # wczytuję dane z pliku
+        with open('nbp_data.json', 'r') as data_file:
+            json_list = json.load(data_file)
+            json_dict = json_list[0]
+        # generuję wygodniejszy dla mnie słownik nazwa_waluty : kurs w zł
+        currencies_data = json_dict["rates"]
+        currencies = {}
+        for currency in currencies_data:
+            currencies[currency['code'] + " " + currency['currency']] = currency['mid']
         return currencies
-
