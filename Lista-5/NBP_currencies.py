@@ -1,11 +1,16 @@
 from bs4 import BeautifulSoup, Tag
 import urllib.request
+import json
 
 class NBP_currencies:
 
     def __init__(self):
         self.url = "https://www.nbp.pl/home.aspx?f=/kursy/kursya.html"
-        self.currencies = self.__generate_currencies(self.__find_currencies())
+        try:
+            self.currencies = self.__generate_currencies(self.__find_currencies())
+        except urllib.error.URLError:
+            with open('currencies.json') as data_file:
+                self.currencies = json.load(data_file)
 
     def __call__(self):
         return self.currencies
@@ -30,5 +35,7 @@ class NBP_currencies:
 
     def __generate_currencies(self, currencies_list):
         currencies = {cur["code"] + " " + cur["name"] : cur["mean_price"] / cur["multiplier"] for cur in currencies_list}
+        with open('currencies.json', 'w') as data_file:
+            json.dump(currencies, data_file, indent=1)
         return currencies
 
