@@ -44,7 +44,7 @@ class Currencies_GUI:
         price_ratio = self.currencies[cur1] / self.currencies[cur2]
         # obliczam ilość otrzymanej waluty
         outcome = amount*price_ratio
-        return outcome
+        return str(outcome)
 
     def __root(self):
         '''
@@ -122,7 +122,7 @@ class Currencies_GUI:
         labelO = tkinter.Label(f4, text='Wynik: ', background=bg_color, font=("Courier", 14))
         labelO.pack()
         outcome = tkinter.StringVar(f4)
-        outcome.set(10)
+        outcome.set("")
         out = tkinter.Entry(f4, textvariable=outcome, width=35, justify='right')
         out.pack()
 
