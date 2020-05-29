@@ -5,7 +5,7 @@ from Graphs import Graphs
 
 class CalculatorGUI:
     '''
-    Główna klasa, tworząca okienko przypominające kalkulator
+    Główna klasa, tworząca okienko, przypominające kalkulator
     '''
     def __init__(self):
         pass

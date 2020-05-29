@@ -35,10 +35,3 @@ class FunctionParser:
             raise ValueError
         except NameError:
             raise NameError
-
-
-    # def __Weierstrass(self, a, b, x):
-    #     if a > b:
-    #         a, b = b, a
-    #     seq = [(a**float(n))*cos((b**float(n))*pi*x) for n in range(1, 100)]
-    #     return sum(seq)
