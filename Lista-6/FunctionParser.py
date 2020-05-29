@@ -12,8 +12,11 @@ class FunctionParser:
         self.xy_range = eval(self.xy_range[0]), eval(self.xy_range[1]), eval(self.xy_range[2]), eval(self.xy_range[3])
         ticks = linspace(self.xy_range[0], self.xy_range[1], 1000)
         expressions = self.expression.split(";")
-        results = [[eval(exp) for x in ticks] for exp in expressions]
+        try:
+            results = {exp : [eval(exp) for x in ticks] for exp in expressions}
+        except SyntaxError:
+            raise SyntaxError
+        except ValueError:
+            raise ValueError
         xy_ticks = list(linspace(self.xy_range[0], self.xy_range[1], 5)), list(linspace(self.xy_range[2], self.xy_range[3], 5))
         return results, xy_ticks, ticks
-
-    # def  

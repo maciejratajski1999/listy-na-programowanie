@@ -1,7 +1,6 @@
 from CalculatorGUI import CalculatorGUI
 
 
-window = CalculatorGUI()
-window()
-outcome = window.outcome
-
+if __name__ == "__main__":
+    window = CalculatorGUI()
+    window()

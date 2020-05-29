@@ -12,13 +12,17 @@ class Graphs:
 
     def __call__(self):
         plt.close()
-        for single_data in self.data:
-            plt.plot(self.ticks, single_data)
+        def single_plot(single_data):
+            plt.plot(self.ticks, single_data[1], label=single_data[0])
+            plt.legend(fontsize='medium')
 
+        for single_data in self.data.items():
+            single_plot(single_data)
         plt.xticks(ticks=self.x_range)
         plt.yticks(ticks=self.y_range)
         plt.grid()
         plt.xlim(self.x_range[0], self.x_range[-1])
         plt.ylim(self.y_range[0], self.y_range[-1])
+
 
         plt.show()
