@@ -4,6 +4,7 @@ class Song:
         self.key = key
         self.tab = self.__translate()[1:]
         self.bpm = self.__translate()[0]
+        self.length = len(self.tab)
 
     def __translate(self):
         self.song_dict = {

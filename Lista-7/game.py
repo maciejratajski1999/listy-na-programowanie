@@ -4,6 +4,7 @@ from song import Song
 from timer import Timer
 
 pygame.init()
+pygame.mixer.init()
 
 size = width, height = 960, 540
 speed = [0, 1]
@@ -14,6 +15,8 @@ black = 0, 10, 10
 screen = pygame.display.set_mode(size)
 pygame.display.set_caption("Metal Thrashing")
 
+drumstick = pygame.mixer.Sound("resources\\drumstick.wav")
+metal_E = pygame.mixer.Sound("resources\\metal_E.wav")
 
 def game_text(content, font):
     ingame_text = font.render(content, True, black)
@@ -51,29 +54,37 @@ def game_start():
 
 
 def game_song(key):
+
     def get_song(key):
         song = Song(key)
-        return Timer(song.bpm), song.tab
-    song_timer, overtab = get_song(key)
+        return Timer(song.bpm), song.tab, song.length
+    song_timer, overtab, length = get_song(key)
 
     def new_tab(index):
-        tab = overtab[index]
-        notes = [Note(key) for key in tab]
-        sprites = [(pygame.image.load(note.image), note.pos) for note in notes]
-        ingame_positions = [pos for image, pos in sprites]
-        ingame_notes = [image.get_rect() for image, pos in sprites]
-        for i in range(0, len(ingame_notes)):
-            ingame_notes[i].x = ingame_positions[i]
-            ingame_notes[i].y = -100
-        return sprites, ingame_notes
+        try:
+            tab = overtab[index]
+            notes = [Note(key) for key in tab]
+            sprites = [(pygame.image.load(note.image), note.pos) for note in notes]
+            ingame_positions = [pos for image, pos in sprites]
+            ingame_notes = [image.get_rect() for image, pos in sprites]
+            for i in range(0, len(ingame_notes)):
+                ingame_notes[i].x = ingame_positions[i]
+                ingame_notes[i].y = -100
+            return sprites, ingame_notes
+        except IndexError:
+            return [], []
 
-    game_timer = pygame.time.Clock()
+
     all_sprites, all_notes = [], []
+
     while 1:
         for event in pygame.event.get():
             if event.type == pygame.QUIT: sys.exit()
-
+        if song_timer.tab_index > length and len(all_notes) == 0:
+            # TODO
+            raise IOError("koniec piosenki niezaimplementowany")
         if song_timer.check():
+            drumstick.play()
             song_timer.tab_index_up()
             sprites, ingame_notes = new_tab(song_timer.tab_index)
             for new_sprite in sprites:
@@ -84,6 +95,8 @@ def game_song(key):
         __remove = []
         for i in range(len(all_notes)):
             all_notes[i] = all_notes[i].move(speed)
+            if all_notes[i].center[1] == height:
+                metal_E.play()
             if all_notes[i].top > height:
                 __remove.append(i)
         if len(__remove) > 0:
@@ -96,6 +109,7 @@ def game_song(key):
         for j in range(0, len(all_notes)):
             screen.blit(all_sprites[j][0], all_notes[j])
         pygame.display.flip()
-        song_timer(game_timer.tick_busy_loop())
+        song_timer()
+        pygame.time.Clock().tick_busy_loop(30)
 
 game_start()
