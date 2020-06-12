@@ -13,5 +13,5 @@ class Note:
                                   "W": "resources\\W.png",
                                   "E": "resources\\E.png",
                                   "R": "resources\\R.png"}
-        pos_translation = {"Q": 70, "W": 310, "E": 550, "R": 790}
+        pos_translation = {"Q": 190, "W": 350, "E": 510, "R": 660}
         return image_translation[self.key], pos_translation[self.key]
