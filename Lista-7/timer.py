@@ -1,19 +1,19 @@
-from time import time
+from time import time_ns
 class Timer:
 
     def __init__(self, bpm):
         self.bpm = bpm
         self.beat_duration = 60000 / (bpm*2)
         self.timer = 0
-        self.start = time()
+        self.start = time_ns() // 1000000
         self.tab_index = -1
 
     def __call__(self):
-        self.timer = self.timer + (time() - self.start)
+        diff = time_ns() // 1000000
+        self.timer = self.timer + (diff - self.start)
+        self.start = diff
 
     def check(self):
-        if self.tab_index >0 :
-            print(self.timer / self.tab_index)
         barrier = (self.tab_index + 1) * self.beat_duration
         return self.timer >= barrier
 
