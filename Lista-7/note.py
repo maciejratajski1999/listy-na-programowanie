@@ -14,5 +14,6 @@ class Note:
         image_translation = {"Q": ("resources\\Q.png", 190, self.sound_Q),
                                   "W": ("resources\\W.png", 350, self.sound_W),
                                   "E": ("resources\\E.png", 510, self.sound_E),
-                                  "R": ("resources\\R.png", 670, self.sound_R)}
+                                  "R": ("resources\\R.png", 670, self.sound_R),
+                             None : ("resources\\placeholder.bmp", 480, None)}
         return image_translation[self.key]

@@ -75,10 +75,15 @@ def game_song(key):
         try:
             tab = overtab[index]
             notes = [Note(letter, bg_sounds) for letter in tab]
+            if len(notes) == 0:
+                notes = [Note(None, bg_sounds)]
             sprites = [(pygame.image.load(note.image), note.pos) for note in notes]
             ingame_positions = [pos for image, pos in sprites]
             ingame_notes = [image.get_rect() for image, pos in sprites]
-            ingame_sounds = [[pygame.mixer.Sound(note.sound)] for note in notes]
+            try:
+                ingame_sounds = [[pygame.mixer.Sound(note.sound)] for note in notes]
+            except TypeError:
+                ingame_sounds = [[]]
             ingame_keys = [note.key for note in notes]
             for i in range(0, len(ingame_notes)):
                 ingame_notes[i].x = ingame_positions[i]
