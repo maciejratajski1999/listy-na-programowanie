@@ -10,7 +10,7 @@ size = width, height = 960, 540
 speed = [0, 6]
 background = 120, 22, 10
 blue = 10, 50, 130
-grey = 100, 100, 100
+grey = 110, 130, 130
 black = 0, 10, 10
 screen = pygame.display.set_mode(size)
 pygame.display.set_caption("Hit Em Notes")
@@ -25,7 +25,6 @@ def game_text(content, font, color):
 
 def game_start():
     score = Score()
-    print(score.metal, score.blues)
     intro = 1
     while intro == 1:
         for event in pygame.event.get():
@@ -115,7 +114,8 @@ def game_song(key):
 
     all_sprites, all_notes, all_sounds, all_keys = [], [], [], []
     score = 0
-    while 1:
+    loop = 1
+    while loop:
         frame_sounds = []
         note_check = []
         keys = pygame.key.get_pressed()
@@ -154,7 +154,7 @@ def game_song(key):
                 all_sounds[-1].append(drumstick)
             if ((song_timer.tab_index + 1) % 8) == 0:
                 all_sounds[-1].append(highstick)
-            if ((song_timer.tab_index - 1) % 4) == 0:
+            if ((song_timer.tab_index - 1) % 2) == 0:
                 all_sounds[-1].append(kickdrum)
 
         __remove = []
