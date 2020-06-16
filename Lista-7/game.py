@@ -78,6 +78,7 @@ def game_song(key):
     downboard = pygame.image.load("resources\\downboard.png")
     downboard_rect = downboard.get_rect()
     downboard_rect.center = (width/2, height-100)
+    score_font = pygame.font.Font('freesansbold.ttf', 33)
 
     def get_song(key):
         song = Song(key)
@@ -178,8 +179,10 @@ def game_song(key):
                 all_sounds.pop(index)
                 all_keys.pop(index)
 
-
+        score_sprite, score_rect = game_text("score: " + str(score), score_font, grey)
+        score_rect.center = 864, 486
         screen.fill(background)
+        screen.blit(score_sprite, score_rect)
         screen.blit(bg_image, bg_image_rect)
         for j in range(0, len(all_notes)):
             screen.blit(all_sprites[-1 - j][0], all_notes[-1 - j])
