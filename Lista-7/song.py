@@ -54,6 +54,6 @@ class Song:
                              ["W"], ["W", "E"], [], [], ["W"], ["W", "E"], ["W"], ["W", "E"],
                              ["W"], ["W", "E"], [], [], ["W"], ["W", "E"], [], [],
                              ["W"], ["W", "E"], [], [], ["W"], ["W", "E"], ["W"], ["W", "E"],
-                             ], ["resources\\blues_E.wav", "resources\\blues_G.wav", "resources\\blues_C.wav", "resources\\blues_D.wav"],{"Q" : "resources\\user_E2.wav", "W" : "resources\\user_G.wav", "E" : "resources\\user_C2.wav", "R" : "resources\\user_D2.wav"}, "resources\\metalhead.png")
+                             ], ["resources\\blues_E.wav", "resources\\blues_G.wav", "resources\\blues_C.wav", "resources\\blues_D.wav"],{"Q" : "resources\\user_E2.wav", "W" : "resources\\user_G.wav", "E" : "resources\\user_C2.wav", "R" : "resources\\user_D2.wav"}, "resources\\chuck.png")
         }
         return self.song_dict[self.key]

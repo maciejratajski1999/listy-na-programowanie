@@ -55,7 +55,6 @@ def game_start():
             if blues_button.collidepoint(pos):
                 game_song("blues")
 
-
         screen.blit(metal_sprite, metal_rect)
         screen.blit(blues_sprite, blues_rect)
         screen.blit(metal_score_sprite, metal_score_rect)
