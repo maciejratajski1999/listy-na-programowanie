@@ -2,28 +2,30 @@ import sys, pygame
 from note import Note
 from song import Song
 from timer import Timer
-
+from score import Score
 pygame.init()
 pygame.mixer.init()
 
 size = width, height = 960, 540
-speed = [0, 12]
+speed = [0, 6]
 background = 120, 22, 10
 blue = 10, 50, 130
 grey = 100, 100, 100
 black = 0, 10, 10
 screen = pygame.display.set_mode(size)
-pygame.display.set_caption("Metal Thrashing")
+pygame.display.set_caption("Hit Em Notes")
 
 drumstick = pygame.mixer.Sound("resources\\drumstick.wav")
 highstick = pygame.mixer.Sound("resources\\highstick.wav")
 kickdrum = pygame.mixer.Sound("resources\\kickdrum.wav")
 
-def game_text(content, font):
-    ingame_text = font.render(content, True, black)
+def game_text(content, font, color):
+    ingame_text = font.render(content, True, color)
     return ingame_text, ingame_text.get_rect()
 
 def game_start():
+    score = Score()
+    print(score.metal, score.blues)
     intro = 1
     while intro == 1:
         for event in pygame.event.get():
@@ -33,14 +35,20 @@ def game_start():
                 collision(mouse_pos)
         screen.fill(background)
         metal_text = pygame.font.Font('freesansbold.ttf', 71)
-        metal_sprite, metal_rect = game_text("Metal", metal_text)
+        metal_sprite, metal_rect = game_text("Metal", metal_text, black)
         metal_rect.center = 300, 270
         metal_button = pygame.draw.circle(screen, grey, metal_rect.center, 100)
+        metal_score = pygame.font.Font('freesansbold.ttf', 55)
+        metal_score_sprite, metal_score_rect = game_text(str(score.metal), metal_score, black)
+        metal_score_rect.center = 300, 400
 
         blues_text = pygame.font.Font('freesansbold.ttf', 71)
-        blues_sprite, blues_rect = game_text("Blues", blues_text)
+        blues_sprite, blues_rect = game_text("Blues", blues_text, black)
         blues_rect.center = 660, 270
         blues_button = pygame.draw.circle(screen, blue, blues_rect.center, 100)
+        blues_score = pygame.font.Font('freesansbold.ttf', 55)
+        blues_score_sprite, blues_score_rect = game_text(str(score.blues), blues_score, black)
+        blues_score_rect.center = 660, 400
 
         def collision(pos):
             if metal_button.collidepoint(pos):
@@ -51,7 +59,19 @@ def game_start():
 
         screen.blit(metal_sprite, metal_rect)
         screen.blit(blues_sprite, blues_rect)
+        screen.blit(metal_score_sprite, metal_score_rect)
+        screen.blit(blues_score_sprite, blues_score_rect)
         pygame.display.flip()
+
+def aftergame(score):
+    score_font = pygame.font.Font('freesansbold.ttf', 55)
+    sprite, rect = game_text("your score: " + str(score), score_font, grey)
+    rect.center = 480, 270
+    for i in range(0,180):
+        screen.blit(sprite, rect)
+        pygame.time.Clock().tick_busy_loop(60)
+        pygame.display.flip()
+
 
 
 def game_song(key):
@@ -114,8 +134,8 @@ def game_song(key):
                 frame_sounds.append(pygame.mixer.Sound(user_sounds["R"]))
                 note_check.append("R")
         if song_timer.tab_index > length and len(all_notes) == 0:
-            # TODO
-            print(score)
+            aftergame(score)
+            Score().save(score, key)
             game_start()
 
         if song_timer.check():
@@ -166,7 +186,7 @@ def game_song(key):
         screen.blit(downboard, downboard_rect)
         pygame.display.flip()
         song_timer()
-        pygame.time.Clock().tick_busy_loop(30)
+        pygame.time.Clock().tick_busy_loop(60)
         for sound in frame_sounds:
             sound.play()
 
